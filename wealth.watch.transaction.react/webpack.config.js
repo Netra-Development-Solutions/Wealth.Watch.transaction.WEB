@@ -41,12 +41,12 @@ module.exports = (_, argv) => ({
 
   plugins: [
     new ModuleFederationPlugin({
-      name: "wealth.watch.transaction.react",
+      name: "wealth_watch_transaction_react",
       filename: "remoteEntry.js",
-      remotes: {
-        transaction: "client_app_mf@http://localhost:3000/remoteEntry.js"
+      remotes: {},
+      exposes: {
+        "./TransactionForm": "./src/components/forms/Transaction",
       },
-      exposes: {},
       shared: {
         ...deps,
         react: {
