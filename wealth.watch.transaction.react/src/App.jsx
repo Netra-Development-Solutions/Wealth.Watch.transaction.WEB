@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 
 import "./index.css";
 
-import TransactionForm from "./components/forms/Transaction";
+import TransactionForm from "./components/forms/AddTransaction";
 
 const App = () => (
   <div className="container">
