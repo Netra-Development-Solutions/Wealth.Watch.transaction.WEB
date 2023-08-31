@@ -111,8 +111,13 @@ const TransactionList = () => {
     const applicationTheme = useTheme();
 
     React.useEffect(() => {
-        const token =
-            "b8b3ca333b62f6969cd2f85e4d194faf83020892bca77db75cd959b23608693d6b0650ac12389550b7fd819d45a8d363827aa54e8b3863a0975bd785233fe1e53032cfa2635e4fc526b0764d2c126d33a7ed9500ae5345fcd98df2bb5b0d778ac9f55105552d9b1b5e556aedc9c5bcf5a95e862ecdfa565d99cd5323199d253a7b73ea53d1f1530adfab14acf2318565d068eca6be2a8ca0cc7c1c18db11c36c8d05a0874ee657c2c2ca2fe4b4524cf530caf65e22512d0c2c8cf243cb4f96b3fce1c290ca6f72bd47a837d5afa25f58ba2279ec74d8f9030f.a615339ad974083adbc57534e2b6086";
+        var userDetails = localStorage.getItem("userauthdetails") ? JSON.parse(localStorage.getItem("userauthdetails")) : null;
+
+        if (!userDetails) {
+            navigate("/", { replace: true });
+        }
+        
+        const token = userDetails?.token;
 
         if (refresh) {
             get(`http://localhost:4000/TRANSACTION/?page=${paginationModel.page+1}&limit=${paginationModel.pageSize}`, `Bearer ${token}`)
