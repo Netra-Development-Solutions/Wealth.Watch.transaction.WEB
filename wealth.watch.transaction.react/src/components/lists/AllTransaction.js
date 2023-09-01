@@ -110,7 +110,9 @@ const TransactionList = () => {
     const [rowCountState, setRowCountState] = React.useState(0);
     const [rows, setRows] = React.useState([]);
     const applicationTheme = useTheme();
-    const navigate = useNavigate();
+
+    // UNCOMMENT THIS TO WHEN TESTING IN LOCAL ENVIRONMENT
+    // const navigate = useNavigate();
 
     React.useEffect(() => {
         var userDetails = localStorage.getItem("userauthdetails") ? JSON.parse(localStorage.getItem("userauthdetails")) : null;
