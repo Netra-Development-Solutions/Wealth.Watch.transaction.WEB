@@ -4,6 +4,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { darken, lighten, styled } from "@mui/material/styles";
 import { get } from "../../utils/apiHelper";
 import { useTheme } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 const generateColumns = (bankAccounts, creditCards) => {
     const columns = [
@@ -109,6 +110,9 @@ const TransactionList = () => {
     const [rowCountState, setRowCountState] = React.useState(0);
     const [rows, setRows] = React.useState([]);
     const applicationTheme = useTheme();
+
+    // UNCOMMENT THIS TO WHEN TESTING IN LOCAL ENVIRONMENT
+    // const navigate = useNavigate();
 
     React.useEffect(() => {
         var userDetails = localStorage.getItem("userauthdetails") ? JSON.parse(localStorage.getItem("userauthdetails")) : null;
