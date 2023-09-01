@@ -11,9 +11,39 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import { get, post } from "../../utils/apiHelper";
+import { useSnackbar } from "notistack";
 
 export default function TransactionForm({ transaction }) {
+    const [bankAccounts, setBankAccounts] = React.useState([]);
+    const [creditCards, setCreditCards] = React.useState([]);
+    var token;
+    const { enqueueSnackbar } = useSnackbar();
 
+    React.useEffect(() => {
+        var userDetails = localStorage.getItem("userauthdetails") ? JSON.parse(localStorage.getItem("userauthdetails")) : null;
+
+        token = userDetails?.token;
+
+        get("http://localhost:4000/BANK/get-all-accounts", `Bearer ${token}`)
+            .then((response) => {
+                setBankAccounts(response?.data?.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+        get("http://localhost:4000/CREDITCARD/get-all-accounts", `Bearer ${token}`)
+            .then((response) => {
+                setCreditCards(response?.data?.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+    }, []);
+
+    // paymentModeId: is either bankAccountId or creditCardId
     const yupValidationSchema = yup.object({
         description: yup.string(),
         paymentMode: yup.string().required('Payment Mode is required'),
@@ -34,14 +64,37 @@ export default function TransactionForm({ transaction }) {
         },
         validationSchema: yupValidationSchema,
         onSubmit: (values, actions) => {
+            var userDetails = localStorage.getItem("userauthdetails") ? JSON.parse(localStorage.getItem("userauthdetails")) : null;
+
+            token = userDetails?.token;
+
+            if (values.paymentMode === "Cash") {
+                values.isCashTransaction = true;
+            } else {
+                if (values.paymentMode === "Bank") {
+                    values.bankAccountId = values.paymentModeId;
+                } else {
+                    values.creditCardId = values.paymentModeId;
+                }
+                values.isCashTransaction = false;
+            }
+
             console.log(values);
-            actions.setSubmitting(false);
+            post("http://localhost:4000/TRANSACTION/new", `Bearer ${token}`, values)
+            .then((response) => {
+                enqueueSnackbar('Transaction Added Successfully', { variant: 'success', autoHideDuration: 3000 });
+                actions.setSubmitting(false);
+                actions.resetForm();
+            })
+            .catch((error) => {
+                console.log(error);
+                enqueueSnackbar('Error in adding transaction', { variant: 'error', autoHideDuration: 3000 });
+                actions.setSubmitting(false);
+            });
         }
     });
 
     const { handleSubmit, handleChange, values, errors, touched, isSubmitting, setFieldValue } = formik;
-
-    console.log(values);
 
     return (
         <Paper style={{
@@ -79,8 +132,8 @@ export default function TransactionForm({ transaction }) {
                             aria-label="transactionType"
                             name="transactionType"
                         >
-                            <ToggleButton value="CREDIT">CREDIT</ToggleButton>
-                            <ToggleButton value="DEBIT">DEBIT</ToggleButton>
+                            <ToggleButton value="CREDIT">CREDIT | ADD</ToggleButton>
+                            <ToggleButton value="DEBIT">DEBIT | REMOVE</ToggleButton>
                         </ToggleButtonGroup>
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -133,18 +186,27 @@ export default function TransactionForm({ transaction }) {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <FormControl fullWidth>
-                            <InputLabel id="payment-mode-label">Age</InputLabel>
+                            <InputLabel id="payment-mode-label">Payement Via</InputLabel>
                             <Select
                                 labelId="payment-mode-label"
                                 id="demo-simple-select"
-                                value={values.paymentMode}
-                                label="Age"
-                                name="paymentMode"
-                                onChange={handleChange}
+                                value={values.paymentModeId !== "Cash" ? bankAccounts.filter((bankAccount) => bankAccount._id === values.paymentModeId)[0]?.accountName 
+                                                                        || creditCards.filter((creditCard) => creditCard._id === values.paymentModeId)[0]?.cardName 
+                                                                    : values.paymentMode}
+                                label="Payement Via"
+                                name="paymentModeId"
+                                onChange={(e) => {
+                                    setFieldValue('paymentMode', e.target.value == "Cash" ? "Cash" : bankAccounts.filter((bankAccount) => bankAccount._id === e.target.value)[0]?._id ? "Bank" : "Credit Card");
+                                    handleChange(e);
+                                }}
                             >
-                                <MenuItem value={10}>Ten</MenuItem>
-                                <MenuItem value={20}>Twenty</MenuItem>
-                                <MenuItem value={30}>Thirty</MenuItem>
+                                <MenuItem value={"Cash"}>Cash</MenuItem>
+                                {bankAccounts.map((bankAccount) => {
+                                    return <MenuItem color="primary" key={bankAccount._id} value={bankAccount._id}>{bankAccount.accountName}</MenuItem>
+                                })}
+                                {creditCards.map((creditCard) => {
+                                    return <MenuItem color="primary" key={creditCard._id} value={creditCard._id}>{creditCard.cardName}</MenuItem>
+                                })}
                             </Select>
                         </FormControl>
                     </Grid>
