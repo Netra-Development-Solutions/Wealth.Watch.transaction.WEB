@@ -21,7 +21,7 @@ const generateColumns = (bankAccounts, creditCards) => {
             align: "right",
         },
         {
-            field: "transactionDescription",
+            field: "description",
             headerName: "Transaction Description",
             minWidth: 170,
         },
@@ -30,7 +30,6 @@ const generateColumns = (bankAccounts, creditCards) => {
             headerName: "Is Cash Transaction",
             minWidth: 170,
         },
-        { field: "transactionType", headerName: "Transaction Type", minWidth: 170 },
         {
             field: "bankAccountId", headerName: "Bank Account", minWidth: 170,
             valueFormatter: (value) => {
@@ -45,6 +44,7 @@ const generateColumns = (bankAccounts, creditCards) => {
                 return creditCard?.cardName || value?.value;
             }
         },
+        { field: "transactionType", headerName: "Transaction Type", minWidth: 170 },
         {
             field: "createdAt",
             headerName: "Created At",
