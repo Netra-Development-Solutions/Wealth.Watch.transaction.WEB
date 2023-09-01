@@ -111,8 +111,8 @@ const TransactionList = () => {
     const [rows, setRows] = React.useState([]);
     const applicationTheme = useTheme();
 
-    // UNCOMMENT THIS TO WHEN TESTING IN LOCAL ENVIRONMENT
-    // const navigate = useNavigate();
+    // always import navigate function from react-router-dom
+    const navigate = useNavigate();
 
     React.useEffect(() => {
         var userDetails = localStorage.getItem("userauthdetails") ? JSON.parse(localStorage.getItem("userauthdetails")) : null;
