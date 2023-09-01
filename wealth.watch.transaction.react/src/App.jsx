@@ -5,11 +5,15 @@ import "./index.css";
 
 import TransactionForm from "./components/forms/AddTransaction";
 import TransactionList from "./components/lists/AllTransaction";
+import routes from "./routes";
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
-const App = () => (
-  <div className="container">
-    <TransactionForm />
-    <TransactionList />
-  </div>
-);
+const router = createBrowserRouter(routes)
+
+function App() {
+    return (
+        <RouterProvider router={router} />
+    );
+}
+
 ReactDOM.render(<App />, document.getElementById("app"));
