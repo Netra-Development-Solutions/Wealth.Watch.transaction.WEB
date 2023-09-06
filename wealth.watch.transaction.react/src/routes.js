@@ -1,19 +1,14 @@
-import TransactionForm from "./components/forms/AddTransaction";
-import TransactionList from "./components/lists/AllTransaction";
+import TransactionMainLayout from "./Layout";
+import { Navigate } from "react-router-dom";
 
 const routes = [
     {
-        path: '/',
-        element: <div className="container">
-        <TransactionForm />
-        <TransactionList />
-      </div>,
+        path: '/dashboard/transactions',
+        element: <TransactionMainLayout />,
     },
     {
         path: '*',
-        element: <>
-            <h1>404</h1>
-        </>
+        element: <Navigate to="/dashboard/transactions" />,
     }
 ];
 
