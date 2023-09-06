@@ -122,6 +122,12 @@ const TransactionList = () => {
         }
         
         const token = userDetails?.token;
+        const tokenExpiry = userDetails?.tokenExpiry;
+
+        if (tokenExpiry && new Date(tokenExpiry) < new Date()) {
+            localStorage.removeItem("userauthdetails");
+            navigate("/", { replace: true });
+        }
 
         if (refresh) {
             get(`http://localhost:4000/TRANSACTION/?page=${paginationModel.page+1}&limit=${paginationModel.pageSize}`, `Bearer ${token}`)
@@ -168,9 +174,9 @@ const TransactionList = () => {
             elevation={1}
         >
             <Typography variant="h4" mb={2}>Transaction List</Typography>
-            {rows.length === 0 && (
+            {rows.length === 0 ? (
                 <Typography variant="body1">No transactions found</Typography>
-            )}
+            ) :
             <StyledTransactionGrid
                 columns={generateColumns(bankAccounts, creditCards)}
                 getRowClassName={(params) => `super-app-theme--${params.row?.transactionType}--${applicationTheme?.palette?.mode || "dark"}`}
@@ -190,7 +196,7 @@ const TransactionList = () => {
                     // ...data.initialState,
                     pagination: { paginationModel },
                 }}
-            />
+            />}
         </Paper>
     );
 };

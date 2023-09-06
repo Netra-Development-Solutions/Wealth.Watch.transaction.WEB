@@ -45,8 +45,7 @@ module.exports = (_, argv) => ({
       filename: "remoteEntry.js",
       remotes: {},
       exposes: {
-        "./TransactionForm": "./src/components/forms/AddTransaction",
-        "./TransactionList": "./src/components/lists/AllTransaction",
+        "./TransactionMainLayout": "./src/Layout"
       },
       shared: {
         ...deps,
