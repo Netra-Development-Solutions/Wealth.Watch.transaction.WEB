@@ -4,7 +4,7 @@ const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPl
 const deps = require("./package.json").dependencies;
 module.exports = (_, argv) => ({
   output: {
-    publicPath: "https://test-blob.s3.ap-south-1.amazonaws.com/plugins/wealth.watch.transaction.react/1.0.1/",
+    publicPath: "https://test-blob.s3.ap-south-1.amazonaws.com/plugins/transaction/1.0.1/",
   },
 
   resolve: {

@@ -6,7 +6,7 @@ pipeline {
         repo_url = "https://github.com/Netra-Development-Solutions/Wealth.Watch.transaction.WEB"
         bucket = "test-blob"
         region = "ap-south-1"
-        plugin_name = "wealth.watch.transaction.react"
+        plugin_name = "transaction"
     }
     
     stages {
